@@ -1,5 +1,5 @@
-npm install browserify reactify watchify uglify-js react
-NODE_ENV=productoin browserify -t [ reactify --es6 ] main.js | uglifyjs> compiled.min.js
+npm install browserify moment react-dom reactify watchify uglify-js react -- save
+NODE_ENV=production browserify -t [ reactify --es6 ] main.js | uglifyjs > compiled.min.js
 watchify -v -d -t [ reactify --es6 ] main.js -o compiled.js
 
 //app.js
@@ -7,17 +7,19 @@ var React = require('react');
 
 var Search = require('./Search');
 var Map = require('./Map');
-var Current Location = require('./CurrentLocation');
+var CurrentLocation = require('./CurrentLocation');
 var LocationList = require('./LocationList');
 
 var App = React.createClass({
+     
      getInitialState(){
-      // Extract the favorite locations from local storage
+     
+     // Extract the favorite locations from local storage
       
       var favorites = [];
       
       if (localStorage.favorites){
-            favorites = JSON.parse(localStorage.favorites)
+            favorites = JSON.parse(localStorage.favorites);
             }
       //Nobody would get get if we center it on Paris by default
       
@@ -32,8 +34,9 @@ var App = React.createClass({
    },
    
  toggleFavorite(address){
+ 
      if(this.isAddressInFavorites(address)){
-         this.removeFromFavorites(address);
+        this.removeFromFavorites(address);
      }
      else{
          this.addToFavorites(address);
@@ -67,7 +70,7 @@ removeFromFavorites(address){
          if(favorites[i].address == address){
              index = i;
              break; 
-             }
+         }
       }
      
      // If it was found, remove it from the favorites array
@@ -115,13 +118,13 @@ removeFromFavorites(address){
                var latlng = results[0].geometry.location;
                
                self.setState({
-                    currentAddress" results[0].formatted_address, 
+                    currentAddress: results[0].formatted_address, 
                     mapCoordinates: {
                         lat: latlng.lat(), 
                         lng: latlng.lng()
                     }
               });
-       },
+       }
   });
 
 },
@@ -137,7 +140,7 @@ render(){
             <Map lat={this.state.mapCoordinates.lat} lng={this.state.mapCoordinates.lng} />
             
             <CurrentLocation address={this.state.currentAddress}
-                 favorites={this.isAddressInFavorites(this.state.currentAddress)}
+                 favorite={this.isAddressInFavorites(this.state.currentAddress)}
                  onFavoriteToggle={this.toggleFavorite}/>
              
              <LocationList locations={this.state.favorites} activeLocationAddress={this.state.currentAddress}
@@ -155,6 +158,7 @@ render(){
 var React = require('react'); 
 
 var CurrentLocation = React.createClass({
+    
     toggleFavorite(){
         this.props.onFavoriteToggle(this.props.address); 
     },
@@ -212,17 +216,27 @@ var LocationList = React.createClass({
        });
        
        module.exports=LocationsList;
+
 //LocationItem
+
 var React = require('react'); 
 var moment = require('moment');
 
 var LocationItem = React.createClass({
     
-    handleClick();
+    handleClick(){
         this.props.onCLick(this.props.address);
         }
         
-    return  (
+    render(){
+    
+        var cn ='list-group-item';
+        
+        if(this.props.active){
+          cn += ' active-location';
+        }
+    
+       return (
         <a className={cn} onClick={this.handleClick}>
           {this.props.address}
           <span className='createdAt'>{ moment (this.props.timestamp).fromNow() } </span>
@@ -236,15 +250,16 @@ var LocationItem = React.createClass({
  module.exports = LocationItem; 
  
  //Map
- var React = require('react');
+ 
+ var ReactDom = require('react-dom');
  
  var Map = React.createClass({
  
      componentDidMount(){
      //calling method manually 
      
-     this.componentDidUpdate()'
-   };
+     this.componentDidUpdate();
+   },
    
    componentDidUpdate(){
    
@@ -285,7 +300,7 @@ var LocationItem = React.createClass({
    
    //Search
    
-   var React = require('react'); 
+   var ReactDom = require('react-dom'); 
    
    var Search = React.createClass({
    
@@ -294,29 +309,26 @@ var LocationItem = React.createClass({
            },
            
        handleChange(event) {
-           
-           event.preventDefault();
-           
-           //When form is submitted, call onSearch classback that is passed to the component
-           
-           this.props.onSearch(this.state.value); 
-           
-           //unfocus the text input field
-           
-           this.getDOMNode().querySelector('input').blur();
-         };
+           this.setState({value: event.target.value});
+       },
+         
+       handleSubmit(event){ event.preventDefault(); this.props.onSearch(this.state.value);
+       ReactDom.findDOMNode(this).querySelector('input').blur();
+         },
          
          render() {
            
              return (
                  <form id='geocoding_form' className='form-horizonatal' onSubmit={this.handleSubmit}>
                      <div className='form-group'>
-                         <div className='input-group'>
-                             <input type='text' className='form-control' id='address' placeholder='Find a location..." 
-                              value={this.state.value} onChange={this.handleChange}/>
-                              <span className='input-group-btn'>
-                                   <span className='glyphicon glyphicon-search' aria-hidden='true></span>
+                         <div className='col-xs-12 col-md-6 col-md-offset-3'>
+                             <div className='input-group'>
+                                 <input type='text' className='form-control' id='address' placeholder='Find a location..." 
+                                  value={this.state.value} onChange={this.handleChange} />
+                                 <span className='input-group-btn'>
+                                   <span className='glyphicon glyphicon-search' aria-hidden='true'></span>
                               </span>
+                            </div>  
                          </div>
                       </div>
                   </form>
@@ -326,27 +338,18 @@ var LocationItem = React.createClass({
        });
        
       module.exports = Search;
+     
+//main
       
-      //main
-      
-      var React = require('react');
+      var ReactDom = require('react-dom');
       var App = require('./components/App');
       
       React.redner(
-         <App /> ,
+         <App />,
          document.getElementById('main')
       ); 
       
      //end of code
-       
-         
-           }
-     
-    
-          
-              
-                
-                
   
                 
             
