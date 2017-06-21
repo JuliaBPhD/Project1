@@ -150,4 +150,205 @@ render(){
    });
    
  module.exports = App;
+
+//CurrentLocation
+var React = require('react'); 
+
+var CurrentLocation = React.createClass({
+    toggleFavorite(){
+        this.props.onFavoriteToggle(this.props.address); 
+    },
+    
+    render(){
+    
+        var starClassName = 'glyphicon glyphicon-star-empty';
+        
+        if(this.props.favorit){
+            starClassName = 'glyphicon glyphicon-star';
+        }
+        
+        return (
+            <div className='col-xs-12 col-md-6 col-md-offset-3 current-location'>
+                <h4 id = 'save-location'>{this.props.address} </h4>
+                <span className={starClassName} onClick={this.toggleFavorite} aria-hidden='true'></span>
+             </div>
+           );
+        }
+    });
+  module.exports = CurrentLocation; 
+
+//LocationList
+
+var React = require('react');
+var LocationItem = require ('./LocationItem');
+
+var LocationList = React.createClass({
+
+     render(){
+     
+          var self = this;
+          
+          var locations = this.props.locations.map(function(1){
+          
+               var active = self.props.activeLocationAddress == 1.address; 
+               
+               //passing the onCLick callback of this LocationList to each location
+               
+               return <LocationItem address={1.address} timestamp={1.timestamp}
+                       active={active} onClick={self.props.onClick} />
+                });
+                
+               if(!locations.length){
+                   return null; 
+               }
+               
+               return (
+                   <div className='list group col-xs-12 col-md-6 col-md-offset-3'>
+                       <span className='list-group-item active'> Saved Locations </span>
+                       {locations}
+                   </div>
+                )
+             }
+       });
+       
+       module.exports=LocationsList;
+//LocationItem
+var React = require('react'); 
+var moment = require('moment');
+
+var LocationItem = React.createClass({
+    
+    handleClick();
+        this.props.onCLick(this.props.address);
+        }
+        
+    return  (
+        <a className={cn} onClick={this.handleClick}>
+          {this.props.address}
+          <span className='createdAt'>{ moment (this.props.timestamp).fromNow() } </span>
+          <span className='glyphicon glyphicon-menu-right'></span>
+        </a>
+       )
+       
+    }
+ });
+ 
+ module.exports = LocationItem; 
+ 
+ //Map
+ var React = require('react');
+ 
+ var Map = React.createClass({
+ 
+     componentDidMount(){
+     //calling method manually 
+     
+     this.componentDidUpdate()'
+   };
+   
+   componentDidUpdate(){
+   
+       if(this.lastLat == this.props.lat && this.latLng == this.props.lng){
+       
+       return; 
+    }
+    
+    this.lastLat = this.props.lat; 
+    this.lastLng = this.props.lng; 
+    
+    var map = new GMaps ({
+        el: '#map',
+        lat: this.props.lat, 
+        lng: this.props.lng
+     });
+     
+     //Adding a marker
+     
+     map.addMarker({
+         lat: this.props.lat, 
+         lng: this.props.lng
+     });
+  },
+  
+  redner(){
+  
+      return (
+          <div className='map-holder'>
+               <p> Loading....</p>
+               <div id='map'></div>
+          );
+      }
+      
+   });
+   
+   module.exports: Map; 
+   
+   //Search
+   
+   var React = require('react'); 
+   
+   var Search = React.createClass({
+   
+       getInitialState() {
+           return { value: ' ' }; 
+           },
+           
+       handleChange(event) {
+           
+           event.preventDefault();
+           
+           //When form is submitted, call onSearch classback that is passed to the component
+           
+           this.props.onSearch(this.state.value); 
+           
+           //unfocus the text input field
+           
+           this.getDOMNode().querySelector('input').blur();
+         };
+         
+         render() {
+           
+             return (
+                 <form id='geocoding_form' className='form-horizonatal' onSubmit={this.handleSubmit}>
+                     <div className='form-group'>
+                         <div className='input-group'>
+                             <input type='text' className='form-control' id='address' placeholder='Find a location..." 
+                              value={this.state.value} onChange={this.handleChange}/>
+                              <span className='input-group-btn'>
+                                   <span className='glyphicon glyphicon-search' aria-hidden='true></span>
+                              </span>
+                         </div>
+                      </div>
+                  </form>
+              );
             
+            }
+       });
+       
+      module.exports = Search;
+      
+      //main
+      
+      var React = require('react');
+      var App = require('./components/App');
+      
+      React.redner(
+         <App /> ,
+         document.getElementById('main')
+      ); 
+      
+     //end of code
+       
+         
+           }
+     
+    
+          
+              
+                
+                
+  
+                
+            
+        
+
